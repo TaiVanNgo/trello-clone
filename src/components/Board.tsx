@@ -10,16 +10,16 @@ const defaultColumns = [
 ];
 
 const defaultCards = [
-  { id: "aaa", name: "task 1", order: 0, columnId: "col1" },
-  { id: "aaa", name: "task 5", order: 0, columnId: "col1" },
-  { id: "x", name: "task 2", order: 1, columnId: "col2" },
-  { id: "a", name: "task 3", order: 2, columnId: "col3" },
+  { id: "id1", name: "task 1", index: 0, columnId: "col1" },
+  { id: "id2", name: "task 5", index: 1, columnId: "col1" },
+  { id: "id3", name: "task 2", index: 1, columnId: "col2" },
+  { id: "id4", name: "task 3", index: 2, columnId: "col3" },
 ];
 
 export type CardType = {
   name: string;
   id: string | number;
-  order: number;
+  index: number;
   columnId: string;
 };
 
@@ -32,7 +32,10 @@ export default function Board() {
         <Column
           {...column}
           setCards={setCards}
-          cards={cards.filter((c) => c.columnId === column.id)}
+          cards={
+            cards
+              .sort( (a,b) => a.index - b.index)
+              .filter((c) => c.columnId === column.id)}
         />
       ))}
       <NewColumnForm />
