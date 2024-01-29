@@ -37,7 +37,7 @@ export default function Column({ id, name, cards, setCards }: ColumnProps) {
         className="min-h-12"
       >
         {cards.map((card) => (
-          <div className="border bg-white my-2 p-4 rounded-md">
+          <div key={card.id} className="border bg-white my-2 p-4 rounded-md">
             <span>{card.name}</span>
           </div>
         ))}
