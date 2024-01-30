@@ -1,12 +1,18 @@
 'use client';
-
-import { createBoard } from "../actions/boardActions";
+import{createBoard} from "@/app/actions/boardActions"
+import {redirect} from "next/navigation";
 
 export default function NewBoardPage(){
   async function handleNewBoardSubmit(formData: FormData){
-    const boardName = formData.get('name');
-    await createBoard(boardName as string);
-  }
+    const boardName = formData.get('name')?.toString() || '';
+    const result = await createBoard(boardName);
+    if(typeof result !== 'boolean'){
+      const{id} = result;
+      redirect(`/boards/${id}`);
+    }else{
+      alert('Failed to create board');
+    }
+  } 
   return (
     <div>
       <form action={handleNewBoardSubmit} className="max-w-xs block">
