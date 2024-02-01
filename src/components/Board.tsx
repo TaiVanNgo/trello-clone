@@ -2,6 +2,9 @@
 import { useState } from "react";
 import Column from "./Column";
 import NewColumnForm from "./forms/NewColumnForm";
+import { RoomProvider } from "@/app/liveblocks.config";
+import { LiveList } from "@liveblocks/client";
+import { ClientSideSuspense } from "@liveblocks/react";
 
 const defaultColumns = [
   { id: "col1", name: "To Do", index: 0 },
@@ -23,23 +26,37 @@ export type CardType = {
   columnId: string;
 };
 
-export default function Board() {
+export default function Board({ id }: { id: string }) {
   const [cards, setCards] = useState(defaultCards);
   const [columns, setColumns] = useState(defaultColumns);
   return (
-    <div className="flex gap-4">
-      {columns.map((column) => (
-        <Column
-        key={column.id}
-          {...column}
-          setCards={setCards}
-          cards={
-            cards
-              .sort( (a,b) => a.index - b.index)
-              .filter((c) => c.columnId === column.id)}
-        />
-      ))}
-      <NewColumnForm />
-    </div>
+    <RoomProvider
+      id={id}
+      initialPresence={{}}
+      initialStorage={{
+        columns: new LiveList(),
+      }}
+    >
+      <ClientSideSuspense fallback={"Loading..."}>
+        {() => (
+          <>
+            <div className="flex gap-4">
+              {columns.map((column) => (
+                <Column
+                  key={column.id}
+                  {...column}
+                  setCards={setCards}
+                  cards={cards
+                    .sort((a, b) => a.index - b.index)
+                    .filter((c) => c.columnId === column.id)}
+                />
+              ))}
+              <NewColumnForm />
+            </div>
+            ;
+          </>
+        )}
+      </ClientSideSuspense>
+    </RoomProvider>
   );
 }

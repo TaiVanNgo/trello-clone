@@ -23,7 +23,7 @@ export default async function BoardPage(props: PageProps) {
   return (
     <div>
       Board: {boardInfo.metadata.boardName}
-      <Board />
+      <Board id={boardId} />
     </div>
   );
 }
